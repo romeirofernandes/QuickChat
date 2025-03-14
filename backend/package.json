@@ -1,0 +1,11 @@
+{
+  "name": "quick-chat",
+  "version": "1.0.0",
+  "description": "a decent chat app i hope",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "romeiro",
+  "license": "ISC"
+}
