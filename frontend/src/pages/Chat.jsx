@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import Background from "../components/Background";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Chat() {
   const { roomId } = useParams();

@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Background from '../components/Background';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Background from "../components/Background";
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Lobby() {
   const navigate = useNavigate();
-  const [roomId, setRoomId] = useState('');
-  const [error, setError] = useState('');
+  const [roomId, setRoomId] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      navigate('/');
+      navigate("/");
       return;
     }
 
@@ -23,30 +23,34 @@ export default function Lobby() {
     const checkCurrentRoom = async () => {
       try {
         const { data } = await axios.get(`${API_BASE_URL}/api/rooms/current`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (data && data.roomId) {
           navigate(`/chat/${data.roomId}`);
         }
       } catch (err) {
-        console.error('Failed to check current room:', err);
+        console.error("Failed to check current room:", err);
       }
     };
     checkCurrentRoom();
   }, [navigate]);
 
   const createRoom = async () => {
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      const { data } = await axios.post(`${API_BASE_URL}/api/rooms`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const { data } = await axios.post(
+        `${API_BASE_URL}/api/rooms`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       navigate(`/chat/${data.roomId}`);
     } catch (err) {
-      console.error('Failed to create room:', err);
-      setError(err.response?.data?.message || 'Failed to create room');
+      console.error("Failed to create room:", err);
+      setError(err.response?.data?.message || "Failed to create room");
     } finally {
       setIsLoading(false);
     }
@@ -56,18 +60,21 @@ export default function Lobby() {
     e.preventDefault();
     if (!roomId.trim()) return;
 
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      await axios.post(`${API_BASE_URL}/api/rooms/join`, 
+      await axios.post(
+        `${API_BASE_URL}/api/rooms/join`,
         { roomId: roomId.trim() },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       navigate(`/chat/${roomId.trim()}`);
     } catch (err) {
-      console.error('Failed to join room:', err);
-      setError(err.response?.data?.message || 'Failed to join room');
+      console.error("Failed to join room:", err);
+      setError(err.response?.data?.message || "Failed to join room");
     } finally {
       setIsLoading(false);
     }
@@ -76,19 +83,17 @@ export default function Lobby() {
   return (
     <div className="min-h-screen flex flex-col">
       <Background />
-      
+
       {/* Header */}
       <header className="w-full px-6 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-2xl">⚡</span>
-            <span className="font-bricolage text-xl font-bold text-white/90">QuickChat</span>
+            <span className="font-bricolage text-xl font-bold text-white/90">
+              QuickChat
+            </span>
           </div>
-          {user && (
-            <div className="text-white/70">
-              Yo, {user.username}
-            </div>
-          )}
+          {user && <div className="text-white/70">Yo, {user.username}</div>}
         </div>
       </header>
 
@@ -108,7 +113,7 @@ export default function Lobby() {
               disabled={isLoading}
               className="w-full px-6 py-3 bg-indigo-500/80 text-white rounded-xl hover:bg-indigo-500/90 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Creating...' : 'Create Room'}
+              {isLoading ? "Creating..." : "Create Room"}
             </button>
           </div>
 
@@ -133,7 +138,7 @@ export default function Lobby() {
                 disabled={isLoading || !roomId.trim()}
                 className="w-full px-6 py-3 bg-indigo-500/80 text-white rounded-xl hover:bg-indigo-500/90 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Joining...' : 'Join Room'}
+                {isLoading ? "Joining..." : "Join Room"}
               </button>
             </form>
           </div>

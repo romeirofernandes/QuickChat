@@ -6,12 +6,13 @@ import Logo from "../components/Logo";
 import axios from "axios";
 
 export default function SignUp() {
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
   const handleSignUp = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         formData
       );
       const { token, user } = response.data;
